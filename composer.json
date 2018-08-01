@@ -1,0 +1,39 @@
+{
+  "name": "itboye/component_oss",
+  "description": "oss ",
+  "type": "project",
+  "license": "MIT",
+  "keywords": [
+    "h136799711"
+  ],
+  "config": {
+    "secure-http": false
+  },
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "hebidu",
+      "email": "hebiduhebi@126.com",
+      "role": "developer"
+    }
+  ],
+  "scripts": {
+    "post-install-cmd": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "byTest\\": "tests/",
+      "by\\component\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.6 <7.1.18",
+    "qiniu/php-sdk": "dev-master",
+    "itboye/architecture": "1.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "6.5.x-dev"
+  }
+}
