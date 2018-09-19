@@ -15,9 +15,5 @@ class DemoConfig extends AbstractAliyunConfig
 {
     public function __construct()
     {
-        $this->setAppKey("HBDLTAIkYSUxlIbszea");
-        $this->setAppSecret("h15Rg7ePCc7oXjqM7MQqz70QMBwzOE");
-        $this->setEndPoint("http://oss-cn-beijing.aliyuncs.com");
-        $this->setBucket("aliyun-cdn-hebidu-cn");
     }
 }
