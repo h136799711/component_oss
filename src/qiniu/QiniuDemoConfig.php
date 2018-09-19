@@ -15,17 +15,17 @@ class QiniuDemoConfig implements QiniuConfigInterface
 {
     public function getAppKey()
     {
-        return "DAC3vYkwngqgnInHoStopnFDPZtHwj65nABpXJEV";
+        return "";
     }
 
     public function getSecretKey()
     {
-        return "0J3ctvv0k9vUPh9swe3g0i7MXQW6plEd2pumYWHL";
+        return "";
     }
 
     public function getBindDomainName()
     {
-        return "http://pcrt17iqg.bkt.clouddn.com";
+        return "";
     }
 
     public function getDefaultBucket()
