@@ -32,7 +32,8 @@ class AliyunOss
      * @return string
      * @throws OssException
      */
-    public function signUrl($objectKey, $timeout = 3600, $bucket = '') {
+    public function signUrl($objectKey, $timeout = 3600, $bucket = '')
+    {
         if (empty($bucket)) {
             $bucket = $this->config->getBucket();
         }
@@ -43,38 +44,54 @@ class AliyunOss
 
     /**
      * 上传文件
-     * @param string $objectKey  名称
+     * @param string $objectKey 名称
      * @param string $path 文件路径
-     * @param string $callbackUrl  回调地址
+     * @param string $callbackUrl 回调地址
      * @param array $callbackVars 回调的时候传的自定义参数
      * @return \by\infrastructure\base\CallResult
      */
-    public function putFile($objectKey, $path, $callbackUrl = '', $callbackVars = []) {
+    public function putFile($objectKey, $path, $callbackUrl = '', $callbackVars = [])
+    {
         try {
-            $keyValueStr = '';
-            $var = [];
-            foreach ($callbackVars as $key => $val) {
-                $keyValueStr .= ('&'.$key.'=${x:'.$key.'}');
-                $var['x:'.$key] = $val;
+            $options = NULL;
+            if (!empty($callbackUrl)) {
+                $keyValueStr = '';
+                $var = [];
+                foreach ($callbackVars as $key => $val) {
+                    $keyValueStr .= ('&' . $key . '=${x:' . $key . '}');
+                    $var['x:' . $key] = $val;
+                }
+
+                $url = '{
+                    "callbackUrl":"' . $callbackUrl . '",
+                    "callbackBody":"bucket=${bucket}&object=${object}&etag=${etag}&size=${size}&mimeType=${mimeType}&imageInfo.height=${imageInfo.height}&imageInfo.width=${imageInfo.width}&imageInfo.format=${imageInfo.format}' . $keyValueStr . '",
+                    "callbackBodyType":"application/x-www-form-urlencoded"
+                }';
+                // 设置发起回调请求的自定义参数，由Key和Value组成，Key必须以x:开始。
+                $var = json_encode($var);
+                $options = array(
+                    OssClient::OSS_CALLBACK => $url,
+                    OssClient::OSS_CALLBACK_VAR => $var
+                );
             }
 
-            $url = '{
-            "callbackUrl":"'.$callbackUrl.'",
-            "callbackBody":"bucket=${bucket}&object=${object}&etag=${etag}&size=${size}&mimeType=${mimeType}&imageInfo.height=${imageInfo.height}&imageInfo.width=${imageInfo.width}&imageInfo.format=${imageInfo.format}'.$keyValueStr.'",
-            "callbackBodyType":"application/x-www-form-urlencoded"
-        }';
-            // 设置发起回调请求的自定义参数，由Key和Value组成，Key必须以x:开始。
-            $var = json_encode($var);
-            $options = array(
-                OssClient::OSS_CALLBACK => $url,
-                OssClient::OSS_CALLBACK_VAR => $var
-            );
             $ossClient = new OssClient($this->config->getAppKey(), $this->config->getAppSecret(), $this->config->getEndPoint());
             $result = $ossClient->uploadFile($this->config->getBucket(), $objectKey, $path, $options);
-            if (array_key_exists('body', $result)) {
-                $body = json_decode($result['body'], JSON_OBJECT_AS_ARRAY);
 
-                return CallResultHelper::success($body['data'], $body['msg'], $body['code']);
+            if (!empty($callbackUrl)) {
+                if (array_key_exists('body', $result)) {
+                    $body = json_decode($result['body'], JSON_OBJECT_AS_ARRAY);
+                    if (empty($body)) {
+                        $body = simplexml_load_string($result['body']);
+                        if ($body instanceof \SimpleXMLElement) {
+                            $body = json_decode(json_encode($body), JSON_OBJECT_AS_ARRAY);
+                            return CallResultHelper::fail($body['Message'], $body);
+                        }
+                    }
+                    return CallResultHelper::success($body['data'], $body['msg'], $body['code']);
+                }
+            } else {
+                return CallResultHelper::success($result, 'complete', 0);
             }
             return CallResultHelper::fail('返回格式错误，缺少body参数');
         } catch (OssException $e) {
@@ -83,35 +100,38 @@ class AliyunOss
     }
 
 
-
     /**
      * 上传对象
-     * @param string $objectKey  名称
+     * @param string $objectKey 名称
      * @param string $content 内容
-     * @param string $callbackUrl  回调地址
+     * @param string $callbackUrl 回调地址
      * @param array $callbackVars 回调的时候传的自定义参数
      * @return \by\infrastructure\base\CallResult
      */
-    public function putObject($objectKey, $content, $callbackUrl = '', $callbackVars = []) {
+    public function putObject($objectKey, $content, $callbackUrl = '', $callbackVars = [])
+    {
         try {
-            $keyValueStr = '';
-            $var = [];
-            foreach ($callbackVars as $key => $val) {
-                $keyValueStr .= ('&'.$key.'=${x:'.$key.'}');
-                $var['x:'.$key] = $val;
-            }
+            $options = NULL;
+            if (!empty($callbackUrl)) {
+                $keyValueStr = '';
+                $var = [];
+                foreach ($callbackVars as $key => $val) {
+                    $keyValueStr .= ('&' . $key . '=${x:' . $key . '}');
+                    $var['x:' . $key] = $val;
+                }
 
-            $url = '{
-                "callbackUrl":"'.$callbackUrl.'",
-                "callbackBody":"bucket=${bucket}&object=${object}&etag=${etag}&size=${size}&mimeType=${mimeType}&imageInfo.height=${imageInfo.height}&imageInfo.width=${imageInfo.width}&imageInfo.format=${imageInfo.format}'.$keyValueStr.'",
+                $url = '{
+                "callbackUrl":"' . $callbackUrl . '",
+                "callbackBody":"bucket=${bucket}&object=${object}&etag=${etag}&size=${size}&mimeType=${mimeType}&imageInfo.height=${imageInfo.height}&imageInfo.width=${imageInfo.width}&imageInfo.format=${imageInfo.format}' . $keyValueStr . '",
                 "callbackBodyType":"application/x-www-form-urlencoded"
             }';
-            // 设置发起回调请求的自定义参数，由Key和Value组成，Key必须以x:开始。
-            $var = json_encode($var);
-            $options = array(
-                OssClient::OSS_CALLBACK => $url,
-                OssClient::OSS_CALLBACK_VAR => $var
-            );
+                // 设置发起回调请求的自定义参数，由Key和Value组成，Key必须以x:开始。
+                $var = json_encode($var);
+                $options = array(
+                    OssClient::OSS_CALLBACK => $url,
+                    OssClient::OSS_CALLBACK_VAR => $var
+                );
+            }
             $ossClient = new OssClient($this->config->getAppKey(), $this->config->getAppSecret(), $this->config->getEndPoint());
             $result = $ossClient->putObject($this->config->getBucket(), $objectKey, $content, $options);
             if (array_key_exists('body', $result)) {

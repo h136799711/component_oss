@@ -16,7 +16,7 @@ class AliyunUploaderTest extends TestCase
 {
     public function testPath() {
         $uploader = new AliyunOss(new DemoConfig());
-        $cb = "http://rrgc.8raw.com/api.php/callback/index";
+        $cb = "";
         $params = [
             'username'=>"hebidu",
             'password' => '123456',
@@ -24,27 +24,29 @@ class AliyunUploaderTest extends TestCase
 
         $path = dirname(__DIR__)."/qiniu/demo.png";
         $result = $uploader->putFile("demo-".time(), $path, $cb, $params);
+//        $result = $uploader->putFile("demo_".time(), $path);
         var_dump($result);
         $data = $result->getData();
-        $objectKey = $data['object_key'];
-        $signUrl = $uploader->signUrl($objectKey);
-        var_dump($signUrl);
+
+//        $objectKey = $data['object_key'];
+//        $signUrl = $uploader->signUrl($objectKey);
+//        var_dump($signUrl);
     }
 
     public function testIndex() {
 
-        $this->markTestSkipped("this is a skipped test.");
-        $uploader = new AliyunOss(new DemoConfig());
-        $cb = "http://rrgc.8raw.com/api.php/callback/index";
-        $params = [
-            'username'=>"hebidu",
-            'password' => '123456',
-        ];
-        $result = $uploader->putObject("demo-".time(), date('Y-m-d H:i:s'), $cb, $params);
-        var_dump($result);
-        $data = $result->getData();
-        $objectKey = $data['object_key'];
-        $signUrl = $uploader->signUrl($objectKey);
-        var_dump($signUrl);
+//        $this->markTestSkipped("this is a skipped test.");
+//        $uploader = new AliyunOss(new DemoConfig());
+//        $cb = "http://rrgc.8raw.com/api.php/callback/index";
+//        $params = [
+//            'username'=>"hebidu",
+//            'password' => '123456',
+//        ];
+//        $result = $uploader->putObject("demo-".time(), date('Y-m-d H:i:s'), $cb, $params);
+//        var_dump($result);
+//        $data = $result->getData();
+//        $objectKey = $data['object_key'];
+//        $signUrl = $uploader->signUrl($objectKey);
+//        var_dump($signUrl);
     }
 }
