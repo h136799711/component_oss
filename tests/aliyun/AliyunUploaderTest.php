@@ -1,39 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: itboye
- * Date: 2018/8/1
- * Time: 18:37
- */
 
-namespace byTest\aliyun;
+require_once "../../vendor/autoload.php";
 
+$cfg = new \byTest\aliyun\DemoConfig();
+$cfg->setEndPoint("http://oss-cn-beijing.aliyuncs.com");
+$cfg->setBucket("aliyun-cdn-hebidu-cn");
+$cfg->setAppKey("LTAIEGQVOQ4Y033B");
+$cfg->setAppSecret("RKr0lkEDNK0Jnmh91PEi3t5Lb8lYp7");
+$uploader = new \by\component\aliyun\AliyunOss($cfg);
+//$cb = "https://www.taobao.com";
+$cb = "";
+$params = [
+    'username' => "hebidu",
+    'password' => '123456',
+];
 
-use by\component\aliyun\AliyunOss;
-use PHPUnit\Framework\TestCase;
-
-class AliyunUploaderTest extends TestCase
-{
-    public function testPath() {
-        $uploader = new AliyunOss(new DemoConfig());
-        $cb = "";
-        $params = [
-            'username'=>"hebidu",
-            'password' => '123456',
-        ];
-
-        $path = dirname(__DIR__)."/qiniu/demo.png";
-        $result = $uploader->putFile("demo-".time(), $path, $cb, $params);
+$path = dirname(__DIR__) . "/qiniu/demo.png";
+$result = $uploader->putObject("book/demo-" . time(), $path, $cb, $params);
 //        $result = $uploader->putFile("demo_".time(), $path);
-        var_dump($result);
-        $data = $result->getData();
+var_dump($result);
+$data = $result->getData();
 
 //        $objectKey = $data['object_key'];
 //        $signUrl = $uploader->signUrl($objectKey);
 //        var_dump($signUrl);
-    }
 
-    public function testIndex() {
+function testIndex()
+{
 
 //        $this->markTestSkipped("this is a skipped test.");
 //        $uploader = new AliyunOss(new DemoConfig());
@@ -48,5 +41,4 @@ class AliyunUploaderTest extends TestCase
 //        $objectKey = $data['object_key'];
 //        $signUrl = $uploader->signUrl($objectKey);
 //        var_dump($signUrl);
-    }
 }

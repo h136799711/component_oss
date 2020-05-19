@@ -134,13 +134,18 @@ class AliyunOss
             }
             $ossClient = new OssClient($this->config->getAppKey(), $this->config->getAppSecret(), $this->config->getEndPoint());
             $result = $ossClient->putObject($this->config->getBucket(), $objectKey, $content, $options);
-            if (array_key_exists('body', $result) && !empty($result['body'])) {
-                $body = json_decode($result['body'], JSON_OBJECT_AS_ARRAY);
-                if (is_array($body)) {
-                    return CallResultHelper::success($body['data'], $body['msg'], $body['code']);
-                } else {
-                    return CallResultHelper::success([], "body参数缺少信息");
+
+            if (!empty($callbackUrl)) {
+                if (array_key_exists('body', $result) && !empty($result['body'])) {
+                    $body = json_decode($result['body'], JSON_OBJECT_AS_ARRAY);
+                    if (is_array($body)) {
+                        return CallResultHelper::success($body['data'], $body['msg'], $body['code']);
+                    } else {
+                        return CallResultHelper::success([], "body参数缺少信息");
+                    }
                 }
+            } else {
+                return CallResultHelper::success($result['info'], "complete");
             }
             return CallResultHelper::fail('返回格式错误，缺少body参数');
         } catch (OssException $e) {
