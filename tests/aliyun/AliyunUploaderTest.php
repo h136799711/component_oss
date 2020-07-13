@@ -11,7 +11,7 @@ $uploader = new \by\component\aliyun\AliyunOss($cfg);
 //$cb = "https://www.taobao.com";
 $cb = "";
 $params = [
-    'username' => "hebidu",
+    'username' => "",
     'password' => '123456',
 ];
 
