@@ -38,5 +38,11 @@
   },
   "require-dev": {
 
-  }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://composer.hebidu.cn"
+    }
+  ]
 }
