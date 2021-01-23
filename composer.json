@@ -31,7 +31,7 @@
   "require": {
     "php": ">=5.6",
     "qiniu/php-sdk": "7.2.*",
-    "dbh/core": "~1.0",
+    "dbh/core": "^1.3",
     "aliyuncs/oss-sdk-php": "2.3.1",
     "ext-json": "*",
     "ext-simplexml": "*"
