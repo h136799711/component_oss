@@ -9,9 +9,9 @@
 namespace by\component\aliyun;
 
 
+use by\component\aliyun\OSS\Core\OssException;
+use by\component\aliyun\OSS\OssClient;
 use by\infrastructure\helper\CallResultHelper;
-use OSS\Core\OssException;
-use OSS\OssClient;
 
 class AliyunOss
 {
