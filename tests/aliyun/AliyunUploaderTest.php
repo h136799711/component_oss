@@ -4,9 +4,9 @@ require_once "../../vendor/autoload.php";
 
 $cfg = new \byTest\aliyun\DemoConfig();
 $cfg->setEndPoint("http://oss-cn-beijing.aliyuncs.com");
-$cfg->setBucket("aliyun-cdn-xxx-cn");
-$cfg->setAppKey("");
-$cfg->setAppSecret("");
+$cfg->setBucket("aliyun-cdn-hebidu-cn");
+$cfg->setAppKey("LTAIEGQVOQ4Y033B");
+$cfg->setAppSecret("RKr0lkEDNK0Jnmh91PEi3t5Lb8lYp7");
 $uploader = new \by\component\aliyun\AliyunOss($cfg);
 //$cb = "https://www.taobao.com";
 $cb = "";

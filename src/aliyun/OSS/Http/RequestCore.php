@@ -731,6 +731,7 @@ class RequestCore
         if ($curl_handle && $response) {
             $this->response = $response;
         }
+
         // Determine what's what.
         $header_size = curl_getinfo($curl_handle, CURLINFO_HEADER_SIZE);
         $this->response_headers = substr($this->response, 0, $header_size);
@@ -780,6 +781,10 @@ class RequestCore
         }
         $parsed_response = $this->process_response($curl_handle, $this->response);
         curl_close($curl_handle);
+        if (version_compare(PHP_VERSION, "8.0.0") >= 0) {
+            unset($curl_handle);
+        }
+
         if ($parse) {
             return $parsed_response;
         }
